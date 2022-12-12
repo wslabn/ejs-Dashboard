@@ -1,53 +1,23 @@
-/* globals Chart:false, feather:false */
-
-(() => {
-  'use strict'
-
-  feather.replace({ 'aria-hidden': 'true' })
-
-  // Graphs
-  const ctx = document.getElementById('myChart')
-  // eslint-disable-next-line no-unused-vars
-  const myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: [
-        'Sunday',
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday'
-      ],
-      datasets: [{
-        data: [
-          15339,
-          21345,
-          18483,
-          24003,
-          23489,
-          24092,
-          12034
-        ],
-        lineTension: 0,
-        backgroundColor: 'transparent',
-        borderColor: '#007bff',
-        borderWidth: 4,
-        pointBackgroundColor: '#007bff'
-      }]
-    },
-    options: {
-      scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero: false
-          }
-        }]
-      },
-      legend: {
-        display: false
-      }
+$( document ).ready(function() {
+  const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+   
+  function niceBytes(x){
+    let l = 0, n = parseInt(x, 10) || 0;
+    while(n >= 1024 && ++l){
+        n = n/1024;
     }
-  })
-})()
+    return(n.toFixed(n < 10 && l > 0 ? 1 : 0) + ' ' + units[l]);
+  }
+
+  $.ajax({
+    url: "/getmem",
+    dataType: "json",
+    data:{},
+    success: function(data){
+      let mem = data[0].size
+      console.log(mem);
+     console.log(niceBytes(mem));
+    }
+  });
+
+});//end doc ready
